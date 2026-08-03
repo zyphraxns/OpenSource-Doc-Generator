@@ -1,0 +1,25 @@
+# EditorConfig: https://editorconfig.org
+# 帮助不同编辑器/IDE 维护一致的编码风格
+
+root = true
+
+# 所有文件
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Markdown 文件（保留尾部空格，因为两个空格表示换行）
+[*.md]
+trim_trailing_whitespace = false
+
+# YAML 文件
+[*.{yml,yaml}]
+indent_size = 2
+
+# Makefile（必须用 tab）
+[Makefile]
+indent_style = tab

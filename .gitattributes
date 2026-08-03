@@ -1,0 +1,19 @@
+# 统一换行符
+* text=auto eol=lf
+
+# 二进制文件
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# 语言统计修正（避免将文档计入语言统计）
+docs/* linguist-documentation
+*.md linguist-documentation
+
+# 导出忽略（git archive 时不包含）
+.gitattributes export-ignore
+.gitignore export-ignore
+.github export-ignore
