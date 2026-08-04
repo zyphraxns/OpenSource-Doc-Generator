@@ -40,7 +40,7 @@
 ## 执行
 
 辱骂、骚扰或其他不可接受的行为可通过 [GitHub Issues](https://github.com/zyphraxns/opensource-doc-generator/issues)
-或邮件 ziliang.qui@this-weimar.com 向项目维护者报告。
+或邮件 ziliang.qiu.de@gmail.com 向项目维护者报告。
 所有投诉都将被及时、公正地审查和调查。
 
 所有社区成员都应遵守这些准则，违反者可能面临暂时或永久封禁。
