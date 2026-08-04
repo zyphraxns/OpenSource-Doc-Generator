@@ -154,6 +154,8 @@ Skill 触发后会执行五个步骤：
 4. **文档生成** — 根据用户确认的方案逐一生成文档文件
 5. **总结报告** — 列出已创建文件、建议补充内容、未创建文件及原因
 
+## 支持
+
 [![Buy me a coffee](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/zyphraxns)
 
 ## 许可证
