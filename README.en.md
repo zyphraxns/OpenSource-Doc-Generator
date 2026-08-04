@@ -140,6 +140,9 @@ The Skill executes five steps:
 | **V2** (current) | Adds user confirmation step: presents tiered recommendation plans before generating |
 | V1 (archived in `V1/`) | Original: analyzes and generates directly without user confirmation |
 
+## Supports
+[![Buy me a coffee](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/zyphraxns)
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
