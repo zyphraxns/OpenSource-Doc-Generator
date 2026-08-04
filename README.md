@@ -5,6 +5,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![TRAE Work Skill](https://img.shields.io/badge/TRAE%20Work-Skill-blue.svg)](https://www.trae.cn/)
 
+**[English Documentation](README.en.md)**
+
 ## 简介
 
 `opensource-doc-generator` 是一个 [TRAE Work](https://www.trae.cn/) Skill，帮助 Agent 根据项目的实际文件和结构，为开源平台生成全套规范的说明文档。
@@ -27,12 +29,10 @@
 
 ## 版本
 
-本项目包含两个版本：
-
 | 版本 | 目录 | 说明 |
 |------|------|------|
-| **V2**（推荐） | `V2/` | 新增用户交互步骤：分析后展示分级推荐方案，经用户确认后再生成 |
-| V1 | `V1/` | 初始版本：分析后直接选择文档类型并生成 |
+| **V2**（当前版本） | 根目录 | 新增用户交互步骤：分析后展示分级推荐方案，经用户确认后再生成 |
+| V1（存档） | `V1/` | 初始版本：分析后直接选择文档类型并生成 |
 
 ### V1 vs V2 区别
 
@@ -46,23 +46,24 @@ V2 在生成文件前会向用户展示：
 2. 3-4 个分级推荐方案（全套/标准/基础/最小，每个方案有不同文件清单和说明）
 3. 需要用户决定的问题（许可证类型、文档语言、作者信息等）
 
-**建议直接使用 V2。** V1 保留供参考。
+**当前根目录即为 V2 版本，直接使用即可。** V1 保留在 `V1/` 目录供参考。
 
 ## 安装
 
 ### 方式一：手动安装
 
-将本仓库克隆到本地，然后把 V2 版本的 `opensource-doc-generator` 内容复制到 TRAE Work 的 Skills 目录：
+将本仓库克隆到本地，然后把 Skill 内容复制到 TRAE Work 的 Skills 目录：
 
 ```bash
 git clone https://github.com/zyphraxns/opensource-doc-generator.git
-cp -r opensource-doc-generator/V2/ ~/.trae-cn/skills/opensource-doc-generator/
+cp opensource-doc-generator/SKILL.md ~/.trae-cn/skills/opensource-doc-generator/
+cp -r opensource-doc-generator/references ~/.trae-cn/skills/opensource-doc-generator/
 ```
 
 ### 方式二：直接下载
 
 1. 下载本仓库的 ZIP 包
-2. 将 `V2/` 目录中的内容（`SKILL.md` 和 `references/` 文件夹）放入 `~/.trae-cn/skills/opensource-doc-generator/` 目录
+2. 将 `SKILL.md` 和 `references/` 文件夹放入 `~/.trae-cn/skills/opensource-doc-generator/` 目录
 
 安装完成后，Skill 会在下次 TRAE Work 会话中自动加载。
 
@@ -86,19 +87,21 @@ Skill 会自动分析你的项目，展示推荐方案供你选择，确认后�
 
 ```
 opensource-doc-generator/
-├── V1/                               # 第一版（初始版本）
-│   ├── SKILL.md                      # Skill 主文件
+├── SKILL.md                          # Skill 主文件（V2，中文）
+├── SKILL.en.md                       # Skill 主文件（V2，英文）
+├── references/
+│   ├── file-types-guide.md           # 详细文件类型指南（中文）
+│   └── file-types-guide.en.md        # 详细文件类型指南（英文）
+├── V1/                               # 第一版（存档）
+│   ├── SKILL.md
 │   └── references/
-│       └── file-types-guide.md       # 详细文件类型指南
-├── V2/                               # 第二版（推荐）
-│   ├── SKILL.md                      # Skill 主文件（含用户交互步骤）
-│   └── references/
-│       └── file-types-guide.md       # 详细文件类型指南
-├── README.md                         # 你正在看的这个文件
+│       └── file-types-guide.md
+├── README.md                         # 本文件（中文）
+├── README.en.md                      # 英文 README
 ├── LICENSE                           # MIT 许可证
 ├── CONTRIBUTING.md                   # 贡献指南
 ├── CODE_OF_CONDUCT.md               # 行为准则
-├── CHANGELOG.md                      # 变更日志
+├── CHANGELOG.md                      # 变更日志（中英双语）
 ├── .gitignore                        # Git 忽略规则
 ├── .editorconfig                     # 编辑器配置
 ├── .gitattributes                    # Git 属性配置
@@ -141,7 +144,7 @@ opensource-doc-generator/
 | **场景** | `.env.example` | 环境变量示例 |
 | **场景** | `Makefile` | 构建自动化 |
 
-## 工作流程（V2）
+## 工作流程
 
 Skill 触发后会执行五个步骤：
 
