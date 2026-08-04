@@ -9,7 +9,7 @@
 
 `opensource-doc-generator` 是一个 [TRAE Work](https://www.trae.cn/) Skill，帮助 Agent 根据项目的实际文件和结构，为开源平台生成全套规范的说明文档。
 
-核心思路：**先分析项目，再智能选择所需文档类型，最后逐一生成**。
+核心思路：**先分析项目，再智能推荐分级方案，经用户确认后逐一生成**。
 
 开源项目的文档质量直接影响项目的采纳率、贡献者增长和社区健康度。一份好的 README 可以让用户在 30 秒内理解项目价值；一份清晰的 CONTRIBUTING 可以降低 50% 的贡献者入门成本；而缺少 LICENSE 的项目在法律意义上根本不算开源。
 
@@ -17,27 +17,52 @@
 
 - **智能项目分析** — 自动扫描项目结构、配置文件、技术栈，提取项目名称、版本、依赖等关键信息
 - **20+ 种文档类型** — 覆盖 README、LICENSE、CONTRIBUTING、CHANGELOG、CODE_OF_CONDUCT、SECURITY、Issue 模板、PR 模板等全部常见开源文档
-- **决策矩阵驱动** — 根据项目特征（是否接受贡献、是否有版本发布、是否处理敏感数据等）智能选择需要的文档，不会一刀切
+- **分级推荐方案** — 根据项目特征生成 3-4 个不同完整度的推荐方案（全套/标准/基础/最小），让用户自行选择
+- **用户确认机制** — 在生成文件前向用户展示分析摘要、分级方案和需要确认的问题（许可证类型、文档语言等），经用户确认后再开始生成
+- **决策矩阵驱动** — 根据项目特征（是否接受贡献、是否有版本发布、是否处理敏感数据等）智能推荐文档
 - **技术栈感知** — 自动识别 Node.js / Python / Go / Rust / Java / C# / Godot 等技术栈，生成对应的 .gitignore 规则
 - **许可证选择指南** — 内置 MIT / Apache-2.0 / GPL-3.0 / BSD / LGPL / AGPL 等许可证的适用场景说明
 - **详细内容指南** — 每种文档类型都有完整的内容结构模板和最佳实践建议（见 `references/file-types-guide.md`）
 - **质量检查清单** — 生成后自动检查文档完整性、交叉引用一致性、占位符残留等
 
+## 版本
+
+本项目包含两个版本：
+
+| 版本 | 目录 | 说明 |
+|------|------|------|
+| **V2**（推荐） | `V2/` | 新增用户交互步骤：分析后展示分级推荐方案，经用户确认后再生成 |
+| V1 | `V1/` | 初始版本：分析后直接选择文档类型并生成 |
+
+### V1 vs V2 区别
+
+V2 相比 V1 的核心改进是增加了**用户确认与选择**步骤：
+
+- V1：项目分析 → 文档选择（内部决定）→ 文档生成 → 总结报告
+- V2：项目分析 → 智能推荐分级（内部）→ **用户确认与选择** → 文档生成 → 总结报告
+
+V2 在生成文件前会向用户展示：
+1. 项目分析摘要（让用户确认 AI 理解是否正确）
+2. 3-4 个分级推荐方案（全套/标准/基础/最小，每个方案有不同文件清单和说明）
+3. 需要用户决定的问题（许可证类型、文档语言、作者信息等）
+
+**建议直接使用 V2。** V1 保留供参考。
+
 ## 安装
 
 ### 方式一：手动安装
 
-将本仓库克隆到本地，然后把 `opensource-doc-generator` 文件夹复制到 TRAE Work 的 Skills 目录：
+将本仓库克隆到本地，然后把 V2 版本的 `opensource-doc-generator` 内容复制到 TRAE Work 的 Skills 目录：
 
 ```bash
 git clone https://github.com/zyphraxns/opensource-doc-generator.git
-cp -r opensource-doc-generator ~/.trae-cn/skills/
+cp -r opensource-doc-generator/V2/ ~/.trae-cn/skills/opensource-doc-generator/
 ```
 
 ### 方式二：直接下载
 
 1. 下载本仓库的 ZIP 包
-2. 解压后将 `opensource-doc-generator` 文件夹放入 `~/.trae-cn/skills/` 目录
+2. 将 `V2/` 目录中的内容（`SKILL.md` 和 `references/` 文件夹）放入 `~/.trae-cn/skills/opensource-doc-generator/` 目录
 
 安装完成后，Skill 会在下次 TRAE Work 会话中自动加载。
 
@@ -55,23 +80,28 @@ cp -r opensource-doc-generator ~/.trae-cn/skills/
 我要把项目上传到 GitHub，帮我生成 README 和其他需要的文档
 ```
 
-Skill 会自动分析你的项目并生成所需的文档文件。
+Skill 会自动分析你的项目，展示推荐方案供你选择，确认后生成所需的文档文件。
 
 ## 目录结构
 
 ```
 opensource-doc-generator/
-├── SKILL.md                         # Skill 主文件（工作流、文档目录、决策矩阵）
-├── references/
-│   └── file-types-guide.md          # 27 种文档类型的详细内容指南和模板
-├── README.md                        # 你正在看的这个文件
-├── LICENSE                          # MIT 许可证
-├── CONTRIBUTING.md                  # 贡献指南
+├── V1/                               # 第一版（初始版本）
+│   ├── SKILL.md                      # Skill 主文件
+│   └── references/
+│       └── file-types-guide.md       # 详细文件类型指南
+├── V2/                               # 第二版（推荐）
+│   ├── SKILL.md                      # Skill 主文件（含用户交互步骤）
+│   └── references/
+│       └── file-types-guide.md       # 详细文件类型指南
+├── README.md                         # 你正在看的这个文件
+├── LICENSE                           # MIT 许可证
+├── CONTRIBUTING.md                   # 贡献指南
 ├── CODE_OF_CONDUCT.md               # 行为准则
-├── CHANGELOG.md                     # 变更日志
-├── .gitignore                       # Git 忽略规则
-├── .editorconfig                    # 编辑器配置
-├── .gitattributes                   # Git 属性配置
+├── CHANGELOG.md                      # 变更日志
+├── .gitignore                        # Git 忽略规则
+├── .editorconfig                     # 编辑器配置
+├── .gitattributes                    # Git 属性配置
 └── .github/
     ├── PULL_REQUEST_TEMPLATE.md     # PR 模板
     └── ISSUE_TEMPLATE/
@@ -111,14 +141,15 @@ opensource-doc-generator/
 | **场景** | `.env.example` | 环境变量示例 |
 | **场景** | `Makefile` | 构建自动化 |
 
-## 工作流程
+## 工作流程（V2）
 
-Skill 触发后会执行四个步骤：
+Skill 触发后会执行五个步骤：
 
 1. **项目分析** — 扫描配置文件、技术栈、目录结构、现有文档，判断项目类型和特征
-2. **文档选择** — 基于决策矩阵，根据项目特征智能选择所需文档（不会一刀切创建所有文件）
-3. **文档生成** — 读取参考指南，结合项目实际信息逐一生成，内容具体准确
-4. **总结报告** — 列出已创建文件、建议补充内容、未创建文件及原因
+2. **智能推荐分级** — 根据分析结果内部生成 3-4 个不同完整度的推荐方案
+3. **用户确认与选择** — 向用户展示项目摘要、分级推荐方案和需要确认的问题，等待用户选择
+4. **文档生成** — 根据用户确认的方案逐一生成文档文件
+5. **总结报告** — 列出已创建文件、建议补充内容、未创建文件及原因
 
 ## 许可证
 
