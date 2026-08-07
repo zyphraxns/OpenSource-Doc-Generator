@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![TRAE Work Skill](https://img.shields.io/badge/TRAE%20Work-Skill-blue.svg)](https://www.trae.cn/)
 
-**[中文文档](README.md)**
+**[中文](README.md)**
 
 ## Overview
 
