@@ -9,7 +9,7 @@
 
 ## 简介
 
-`opensource-doc-generator` 是一个 [TRAE Work](https://www.trae.cn/) Skill，帮助 Agent 根据项目的实际文件和结构，为开源平台生成全套规范的说明文档。
+`opensource-doc-generator` 是一个 AI智能体 Skill，帮助 Agent 根据项目的实际文件和结构，为开源平台生成全套规范的说明文档。
 
 核心思路：**先分析项目，再智能推荐分级方案，经用户确认后逐一生成**。
 
