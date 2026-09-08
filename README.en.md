@@ -9,7 +9,7 @@
 
 ## Overview
 
-`opensource-doc-generator` is a [TRAE Work](https://www.trae.cn/) Skill that helps the AI agent generate a complete set of standardized documentation for open-source platforms (GitHub, GitLab, Gitee, etc.) based on your project's actual files and structure.
+`opensource-doc-generator` is an AI Agent Skill that helps the AI agent generate a complete set of standardized documentation for open-source platforms (GitHub, GitLab, Gitee, etc.) based on your project's actual files and structure.
 
 Core philosophy: **Analyze the project first, then present tiered recommendation plans, and generate only after user confirmation.**
 
