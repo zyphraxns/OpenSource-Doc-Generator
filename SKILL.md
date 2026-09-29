@@ -1,69 +1,69 @@
 ---
 name: opensource-doc-generator
 description: |
-  根据项目文件自动生成开源平台（如 GitHub）所需的各种说明文档。扫描项目结构、代码和技术栈，智能判断需要创建哪些文档文件（README、LICENSE、CONTRIBUTING、CHANGELOG、CODE_OF_CONDUCT、SECURITY 等 20+ 种），并为每种文件生成符合规范的内容。
-  当用户提到"开源文档"、"README"、"上传到 GitHub"、"准备开源"、"项目说明文件"、"文档生成"、"开源准备"、"CONTRIBUTING"、"LICENSE 文件"、"CHANGELOG"等意图时，务必使用此 Skill。即使用户只是说"帮我的项目写个说明"或"我想把项目开源"，也应触发此 Skill。
+  Automatically generate the various documentation files required by open source platforms (such as GitHub) based on project files. It scans the project structure, code, and tech stack, intelligently determines which documentation files to create (README, LICENSE, CONTRIBUTING, CHANGELOG, CODE_OF_CONDUCT, SECURITY, and 20+ others), and generates spec-compliant content for each file.
+  Whenever users mention intents such as "open source docs", "README", "upload to GitHub", "prepare for open source", "project description file", "doc generation", "open source preparation", "CONTRIBUTING", "LICENSE file", "CHANGELOG", etc., this Skill must be used. Even if the user simply says "write a description for my project" or "I want to open source my project", this Skill should be triggered.
 ---
 
-# 开源文档生成器 (Open Source Documentation Generator)
+# Open Source Documentation Generator
 
-## 概述
+## Overview
 
-本 Skill 帮助 Agent 根据项目的实际文件和结构，为开源平台（如 GitHub、GitLab、Gitee 等）生成全套规范的说明文档。核心思路是：**先分析项目，再智能推荐分级方案，经用户确认后逐一生成**。
+This Skill helps Agents generate a complete, spec-compliant set of documentation for open source platforms (such as GitHub, GitLab, Gitee, etc.) based on a project's actual files and structure. The core approach is: **first analyze the project, then intelligently recommend tiered plans, and generate them one by one after user confirmation**.
 
-开源项目的文档质量直接影响项目的采纳率、贡献者增长和社区健康度。一份好的 README 可以让用户在 30 秒内理解项目价值；一份清晰的 CONTRIBUTING 可以降低 50% 的贡献者入门成本；而缺少 LICENSE 的项目在法律意义上根本不算开源。
+The documentation quality of an open source project directly affects adoption rates, contributor growth, and community health. A good README lets users understand a project's value within 30 seconds; a clear CONTRIBUTING can cut the onboarding cost for contributors by 50%; and a project without a LICENSE is not legally open source at all.
 
-## 工作流程
+## Workflow
 
-### 第一步：项目分析
+### Step 1: Project Analysis
 
-深入扫描项目，收集以下信息：
+Scan the project in depth and collect the following information:
 
-1. **项目基本信息**
-   - 项目名称（从 `package.json`、`pyproject.toml`、`Cargo.toml`、`go.mod`、`pom.xml`、`*.csproj` 等配置文件中提取）
-   - 项目描述和用途
-   - 版本号
-   - 作者/维护者信息
+1. **Basic Project Information**
+   - Project name (extracted from config files such as `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `pom.xml`, `*.csproj`, etc.)
+   - Project description and purpose
+   - Version number
+   - Author/maintainer information
 
-2. **技术栈识别**
-   - 编程语言（通过文件扩展名和配置文件判断）
-   - 框架和库（从依赖文件中提取：`package.json`、`requirements.txt`、`Pipfile`、`go.sum`、`Cargo.lock` 等）
-   - 构建工具（Webpack、Vite、CMake、Makefile、Gradle 等）
-   - 测试框架（Jest、Pytest、Go test 等）
-   - CI/CD 配置（是否已有 `.github/workflows/`、`.gitlab-ci.yml` 等）
+2. **Tech Stack Identification**
+   - Programming languages (inferred from file extensions and config files)
+   - Frameworks and libraries (extracted from dependency files: `package.json`, `requirements.txt`, `Pipfile`, `go.sum`, `Cargo.lock`, etc.)
+   - Build tools (Webpack, Vite, CMake, Makefile, Gradle, etc.)
+   - Test frameworks (Jest, Pytest, Go test, etc.)
+   - CI/CD configuration (whether `.github/workflows/`, `.gitlab-ci.yml`, etc. already exist)
 
-3. **项目结构分析**
-   - 目录结构（源码、文档、测试、配置等目录的分布）
-   - 入口文件（`main.py`、`index.js`、`src/main.rs`、`cmd/main.go` 等）
-   - 文档目录（`docs/`、`wiki/` 等）
-   - 示例代码（`examples/`、`demo/` 等）
+3. **Project Structure Analysis**
+   - Directory structure (distribution of source, docs, test, config directories, etc.)
+   - Entry files (`main.py`, `index.js`, `src/main.rs`, `cmd/main.go`, etc.)
+   - Documentation directories (`docs/`, `wiki/`, etc.)
+   - Example code (`examples/`, `demo/`, etc.)
 
-4. **现有文档检查**
-   - 检查项目根目录和 `.github/` 目录下已存在哪些文档文件
-   - 检查 `.gitignore`、`.editorconfig` 等配置文件是否已存在
-   - 检查是否已有 LICENSE 文件
+4. **Existing Documentation Check**
+   - Check which documentation files already exist in the project root and the `.github/` directory
+   - Check whether config files such as `.gitignore`, `.editorconfig` already exist
+   - Check whether a LICENSE file already exists
 
-5. **项目特征判断**
-   - 是否是库/框架（供其他项目依赖）
-   - 是否是独立应用/工具
-   - 是否是学术/科研项目
-   - 是否有 Docker 支持
-   - 是否有多语言支持
-   - 项目规模（小型/中型/大型）
+5. **Project Characteristics Assessment**
+   - Whether it is a library/framework (consumed by other projects)
+   - Whether it is a standalone application/tool
+   - Whether it is an academic/research project
+   - Whether it has Docker support
+   - Whether it has multi-language support
+   - Project scale (small/medium/large)
 
-### 第二步：智能推荐分级
+### Step 2: Intelligent Tiered Recommendations
 
-根据第一步的分析结果，结合下文的**文档类型目录**和**决策矩阵**，在内部生成一套分级推荐方案。这一步不需要向用户输出完整内容，而是为第三步的用户交互做好准备。
+Based on the analysis results from Step 1, combined with the **Document Type Catalog** and **Decision Matrix** below, internally generate a set of tiered recommendation plans. This step does not need to output the full content to the user; instead, it prepares for the user interaction in Step 3.
 
-推荐分级的逻辑是：不同项目、不同用户对文档完整度有不同需求。有人想要面面俱到的全套文档，有人只想要最基本的几个文件。通过分级让用户自己选择，既尊重用户意图，又避免了"一刀切"的问题。
+The logic behind tiered recommendations is: different projects and different users have different needs for documentation completeness. Some want an exhaustive, full set of documents, while others only want the most basic files. Letting users choose via tiers respects their intent and avoids a one-size-fits-all approach.
 
-### 第三步：用户确认与选择
+### Step 3: User Confirmation & Selection
 
-**这是最关键的交互步骤。** 在真正开始生成文件之前，必须先向用户展示分析结果和分级推荐方案，让用户做出选择。绝不能跳过这一步直接生成文件。
+**This is the most critical interaction step.** Before actually generating files, you must present the analysis results and tiered recommendation plans to the user and let them make a choice. Never skip this step and generate files directly.
 
-#### 3.1 展示项目分析摘要
+#### 3.1 Present the Project Analysis Summary
 
-先简明扼要地向用户展示项目分析结果，让用户确认 AI 的理解是否正确：
+First, present the project analysis results to the user concisely, so the user can confirm whether the AI's understanding is correct:
 
 ```
 ## 项目分析摘要
@@ -76,11 +76,11 @@ description: |
 - 推测特征：接受外部贡献、有版本发布、跨平台
 ```
 
-#### 3.2 展示分级推荐方案
+#### 3.2 Present the Tiered Recommendation Plans
 
-根据项目特征，向用户展示 3-4 个不同完整度的推荐方案。每个方案应包含：文件清单、简要说明、适用场景。
+Based on the project's characteristics, present 3-4 recommendation plans with varying levels of completeness. Each plan should include: a file list, a brief description, and applicable scenarios.
 
-推荐的展示格式如下（以一个 Node.js 项目为例）：
+The recommended presentation format is as follows (using a Node.js project as an example):
 
 ```
 ## 推荐方案
@@ -143,19 +143,19 @@ description: |
 仅适合实验性代码或内部演示。
 ```
 
-以上只是示例。实际推荐时应根据项目特征调整每个方案的具体文件清单。例如：
-- 如果项目有 Docker 部署需求，方案一/二应包含 `Dockerfile`
-- 如果项目是学术/科研项目，方案一/二应包含 `CITATION.cff`
-- 如果项目使用环境变量，方案一/二应包含 `.env.example`
-- 如果项目处理敏感数据，方案一应包含 `SECURITY.md`
+The above is only an example. When actually recommending, adjust the specific file list of each plan based on the project's characteristics. For example:
+- If the project has Docker deployment needs, Plan 1/2 should include `Dockerfile`
+- If the project is an academic/research project, Plan 1/2 should include `CITATION.cff`
+- If the project uses environment variables, Plan 1/2 should include `.env.example`
+- If the project handles sensitive data, Plan 1 should include `SECURITY.md`
 
-#### 3.3 询问需要用户决定的事项
+#### 3.3 Ask for Decisions the User Needs to Make
 
-除了让用户选择方案外，还有一些文件的具体内容需要用户确认。这些必须在生成前问清楚，而不是事后猜测。
+In addition to letting the user choose a plan, some file-specific details need user confirmation. These must be clarified before generation rather than guessed afterward.
 
-**必须询问的事项：**
+**Must-ask items:**
 
-1. **许可证类型**（如果方案中包含 LICENSE 且项目尚未指定许可证）：
+1. **License type** (if the plan includes LICENSE and the project has not yet specified a license):
    ```
    LICENSE 文件需要选择许可证类型：
    - MIT：最宽松，几乎无限制，适合希望被广泛集成的项目（推荐）
@@ -167,7 +167,7 @@ description: |
    你的项目使用哪种许可证？
    ```
 
-2. **文档语言**（如果项目代码注释和现有文档无法明确判断）：
+2. **Documentation language** (if it cannot be clearly determined from project code comments and existing docs):
    ```
    文档使用什么语言？
    - 中文
@@ -175,7 +175,7 @@ description: |
    - 中英双语
    ```
 
-3. **作者/版权持有人信息**（如果无法从配置文件中提取）：
+3. **Author/copyright holder information** (if it cannot be extracted from config files):
    ```
    LICENSE 和 README 中需要填入作者/版权持有人名称，请提供：
    - 姓名/组织名：
@@ -183,248 +183,248 @@ description: |
    - GitHub 用户名：
    ```
 
-**根据项目特征可能需要询问的事项：**
+**Items that may need to be asked based on project characteristics:**
 
-- 如果项目有 Docker 需求：是否需要生成 Dockerfile 和 docker-compose.yml？
-- 如果项目是学术/科研：是否需要生成 CITATION.cff？如需要，DOI 是什么？
-- 如果项目接受赞助：是否需要生成 FUNDING.yml？赞助平台是什么？
-- 如果项目有 CI/CD：是否需要生成 GitHub Actions workflow？
+- If the project has Docker needs: Do you need a Dockerfile and docker-compose.yml generated?
+- If the project is academic/research: Do you need a CITATION.cff generated? If so, what is the DOI?
+- If the project accepts sponsorships: Do you need a FUNDING.yml generated? What is the sponsorship platform?
+- If the project has CI/CD: Do you need a GitHub Actions workflow generated?
 
-#### 3.4 等待用户回复
+#### 3.4 Wait for the User's Reply
 
-将上述内容展示给用户后，**停下来等待用户回复**。不要自行假设用户的选择。
+After presenting the above to the user, **stop and wait for the user's reply**. Do not assume the user's choices on your own.
 
-用户可能的回复方式：
-- 选择某个方案（如"我选方案二"）
-- 在方案基础上增减文件（如"方案一，但不要 CODE_OF_CONDUCT"）
-- 回答许可证、语言等问题
-- 提出额外需求
+Possible ways the user may reply:
+- Select a plan (e.g., "I'll go with Plan 2")
+- Add or remove files based on a plan (e.g., "Plan 1, but skip CODE_OF_CONDUCT")
+- Answer the license, language, and other questions
+- Make additional requests
 
-收到用户回复后，最终确认要创建的文件清单，然后进入第四步。
+After receiving the user's reply, finalize the list of files to create, then proceed to Step 4.
 
-### 第四步：文档生成
+### Step 4: Document Generation
 
-对用户确认的每个文件类型：
+For each file type confirmed by the user:
 
-1. 阅读 `references/file-types-guide.md` 中对应章节，了解该文件的详细内容要求和模板
-2. 结合第一步收集的项目信息和第三步用户确认的信息，填充具体内容
-3. 生成文件到正确路径（根目录或 `.github/` 目录）
-4. 对生成的内容进行质量检查
+1. Read the corresponding section in `references/file-types-guide.md` to understand the detailed content requirements and templates for that file
+2. Combine the project information collected in Step 1 and the user-confirmed information in Step 3 to fill in the specific content
+3. Generate the file at the correct path (root directory or `.github/` directory)
+4. Perform a quality check on the generated content
 
-生成原则：
-- 内容要**具体且准确**，基于项目的实际代码和配置，不要使用空洞的模板化语言
-- 使用项目实际的命令、路径、依赖名称
-- 保持文档语言与用户在第三步确认的语言一致
-- 文件之间的交叉引用要保持一致（如 README 中引用 LICENSE、CONTRIBUTING 等）
-- 如果用户已有部分文件，**不要覆盖**，而是提示用户可以参考生成的版本进行改进
+Generation principles:
+- Content should be **specific and accurate**, based on the project's actual code and configuration; avoid empty, templated language
+- Use the project's actual commands, paths, and dependency names
+- Keep the documentation language consistent with what the user confirmed in Step 3
+- Keep cross-references between files consistent (e.g., references to LICENSE, CONTRIBUTING, etc. in README)
+- If the user already has some files, **do not overwrite them**; instead, suggest the user refer to the generated version for improvements
 
-### 第五步：生成总结报告
+### Step 5: Generate a Summary Report
 
-生成所有文件后，向用户输出一份总结报告，包括：
-- 创建了哪些文件及其路径
-- 每个文件的简要说明
-- 建议后续手动补充的内容（如需要用户提供的特定信息）
-- 未创建但可能需要的文件及原因
-
----
-
-## 文档类型目录
-
-以下按优先级分类列出所有可能需要的文档文件。详细的内容指南请阅读 `references/file-types-guide.md`。
-
-### 第一类：必需文件 (Required)
-
-| 文件 | 路径 | 说明 |
-|------|------|------|
-| `README.md` | 根目录 | 项目门面，第一入口。包含项目简介、功能特性、安装方法、使用示例、配置说明等 |
-| `LICENSE` | 根目录 | 开源许可证。没有许可证的代码默认受著作权法保护，他人无权使用 |
-| `.gitignore` | 根目录 | Git 忽略规则，排除构建产物、依赖、密钥等不应提交的文件 |
-
-### 第二类：强烈推荐 (Strongly Recommended)
-
-| 文件 | 路径 | 说明 |
-|------|------|------|
-| `CONTRIBUTING.md` | 根目录 | 贡献指南，说明如何提交 Issue、PR、开发环境配置、代码规范等 |
-| `CODE_OF_CONDUCT.md` | 根目录 | 行为准则，定义社区参与标准，营造友好的协作环境 |
-| `CHANGELOG.md` | 根目录 | 变更日志，按版本记录新增、修改、修复、移除等变更 |
-
-### 第三类：GitHub 社区健康文件 (Recommended)
-
-| 文件 | 路径 | 说明 |
-|------|------|------|
-| `SECURITY.md` | 根目录 | 安全策略，说明如何报告安全漏洞 |
-| `SUPPORT.md` | 根目录 | 支持资源，告知用户获取帮助的途径 |
-| `FUNDING.yml` | `.github/` | 赞助配置，在仓库显示 Sponsor 按钮 |
-| `GOVERNANCE.md` | 根目录 | 项目治理，说明角色定义和决策流程 |
-| `ISSUE_TEMPLATE/` | `.github/` | Issue 模板（Bug 报告、功能请求等） |
-| `PULL_REQUEST_TEMPLATE.md` | `.github/` | PR 模板，标准化合并请求检查项 |
-
-### 第四类：配置类文件 (Configuration)
-
-| 文件 | 路径 | 说明 |
-|------|------|------|
-| `.editorconfig` | 根目录 | 统一不同编辑器的代码风格 |
-| `.gitattributes` | 根目录 | Git 文件属性（换行符、语言统计等） |
-| `CODEOWNERS` | `.github/` | 代码所有者，自动请求评审 |
-| `dependabot.yml` | `.github/` | Dependabot 依赖自动更新配置 |
-
-### 第五类：特定场景文件 (Special Scenarios)
-
-| 文件 | 路径 | 适用场景 |
-|------|------|------|
-| `CITATION.cff` | 根目录 | 学术/科研项目，便于学术引用 |
-| `NOTICE` | 根目录 | Apache-2.0 许可证或含第三方代码 |
-| `AUTHORS` | 根目录 | 列出项目作者 |
-| `MAINTAINERS.md` | 根目录 | 列出当前维护者 |
-| `ARCHITECTURE.md` | 根目录 | 技术架构文档 |
-| `ROADMAP.md` | 根目录 | 项目路线图 |
-| `FAQ.md` | 根目录 | 常见问题解答 |
-| `INSTALL.md` | 根目录 | 详细安装指南（当 README 安装部分过长时拆分） |
-| `Dockerfile` | 根目录 | Docker 容器化部署 |
-| `docker-compose.yml` | 根目录 | Docker Compose 多容器编排 |
-| `.env.example` | 根目录 | 环境变量示例文件 |
-| `Makefile` | 根目录 | 构建/测试自动化 |
+After generating all files, output a summary report to the user, including:
+- Which files were created and their paths
+- A brief description of each file
+- Suggested content to be added manually afterward (e.g., specific information that needs to be provided by the user)
+- Files not created but potentially needed, and the reasons
 
 ---
 
-## 决策矩阵
+## Document Type Catalog
 
-以下矩阵帮助 Agent 在第二步生成分级推荐方案。注意：这只是内部参考，最终创建哪些文件由用户在第三步决定。
+The following lists all documentation files that may be needed, categorized by priority. For detailed content guidelines, read `references/file-types-guide.md`.
 
-### 分级推荐方案设计指南
+### Category 1: Required Files (Required)
 
-在为用户准备推荐方案时，遵循以下分级原则：
+| File | Path | Description |
+|------|------|------|
+| `README.md` | Root directory | The project's front door and primary entry point. Contains project intro, features, installation, usage examples, configuration, etc. |
+| `LICENSE` | Root directory | Open source license. Code without a license is protected by copyright by default, and others have no right to use it. |
+| `.gitignore` | Root directory | Git ignore rules, excluding build artifacts, dependencies, secrets, and other files that should not be committed. |
 
-**方案一（全套文档）** 应包含：
-- 所有必需文件 + 所有强烈推荐文件 + 所有适用的社区健康文件 + 所有适用的配置文件 + 项目特征匹配的场景文件
+### Category 2: Strongly Recommended (Strongly Recommended)
 
-**方案二（标准文档）** 应包含：
-- 所有必需文件 + 强烈推荐文件中的 2-3 个 + 1-2 个最相关的配置文件
+| File | Path | Description |
+|------|------|------|
+| `CONTRIBUTING.md` | Root directory | Contribution guidelines, explaining how to submit Issues, PRs, set up dev environments, code standards, etc. |
+| `CODE_OF_CONDUCT.md` | Root directory | Code of conduct, defining community participation standards and fostering a friendly collaboration environment. |
+| `CHANGELOG.md` | Root directory | Changelog, recording additions, changes, fixes, removals, etc. by version. |
 
-**方案三（基础文档）** 应包含：
-- 所有必需文件（README + LICENSE + .gitignore）
+### Category 3: GitHub Community Health Files (Recommended)
 
-**方案四（最小文档）** 应包含：
-- 仅 README.md
+| File | Path | Description |
+|------|------|------|
+| `SECURITY.md` | Root directory | Security policy, explaining how to report security vulnerabilities. |
+| `SUPPORT.md` | Root directory | Support resources, telling users how to get help. |
+| `FUNDING.yml` | `.github/` | Sponsorship config, displaying a Sponsor button on the repository. |
+| `GOVERNANCE.md` | Root directory | Project governance, explaining role definitions and decision-making processes. |
+| `ISSUE_TEMPLATE/` | `.github/` | Issue templates (bug reports, feature requests, etc.). |
+| `PULL_REQUEST_TEMPLATE.md` | `.github/` | PR template, standardizing pull request checklists. |
 
-设计方案时的注意事项：
-- 每个方案都应包含 README.md，这是不可省略的
-- 如果项目已有某些文件，在方案中标注"已有"
-- 场景文件（如 CITATION.cff、Dockerfile）只在项目特征匹配时才加入方案一
-- 不要在方案三/四中放入场景文件，保持精简
+### Category 4: Configuration Files (Configuration)
 
-### 项目特征 → 推荐文档
+| File | Path | Description |
+|------|------|------|
+| `.editorconfig` | Root directory | Unifies code style across different editors. |
+| `.gitattributes` | Root directory | Git file attributes (line endings, language stats, etc.). |
+| `CODEOWNERS` | `.github/` | Code owners, automatically requesting reviews. |
+| `dependabot.yml` | `.github/` | Dependabot dependency auto-update config. |
 
-| 项目特征 | 方案一额外包含 | 方案二额外包含 |
+### Category 5: Special Scenario Files (Special Scenarios)
+
+| File | Path | Applicable Scenario |
+|------|------|------|
+| `CITATION.cff` | Root directory | Academic/research projects, to facilitate academic citation. |
+| `NOTICE` | Root directory | Apache-2.0 license or projects containing third-party code. |
+| `AUTHORS` | Root directory | Lists project authors. |
+| `MAINTAINERS.md` | Root directory | Lists current maintainers. |
+| `ARCHITECTURE.md` | Root directory | Technical architecture documentation. |
+| `ROADMAP.md` | Root directory | Project roadmap. |
+| `FAQ.md` | Root directory | Frequently asked questions. |
+| `INSTALL.md` | Root directory | Detailed installation guide (split out when the README installation section is too long). |
+| `Dockerfile` | Root directory | Docker containerized deployment. |
+| `docker-compose.yml` | Root directory | Docker Compose multi-container orchestration. |
+| `.env.example` | Root directory | Environment variable example file. |
+| `Makefile` | Root directory | Build/test automation. |
+
+---
+
+## Decision Matrix
+
+The following matrix helps the Agent generate tiered recommendation plans in Step 2. Note: this is only an internal reference; which files are ultimately created is decided by the user in Step 3.
+
+### Tiered Recommendation Plan Design Guide
+
+When preparing recommendation plans for the user, follow these tiering principles:
+
+**Plan 1 (Full Documentation)** should include:
+- All required files + all strongly recommended files + all applicable community health files + all applicable configuration files + scenario files matching project characteristics
+
+**Plan 2 (Standard Documentation)** should include:
+- All required files + 2-3 of the strongly recommended files + 1-2 of the most relevant configuration files
+
+**Plan 3 (Basic Documentation)** should include:
+- All required files (README + LICENSE + .gitignore)
+
+**Plan 4 (Minimal Documentation)** should include:
+- Only README.md
+
+Notes when designing plans:
+- Every plan should include README.md; this is non-negotiable
+- If the project already has certain files, mark them as "already exists" in the plan
+- Scenario files (such as CITATION.cff, Dockerfile) should only be added to Plan 1 when they match project characteristics
+- Do not put scenario files in Plan 3/4; keep them lean
+
+### Project Characteristics → Recommended Documents
+
+| Project Characteristic | Plan 1 Additionally Includes | Plan 2 Additionally Includes |
 |----------|-------------|-------------|
-| 接受外部贡献 | ISSUE_TEMPLATE/ + PULL_REQUEST_TEMPLATE.md | CONTRIBUTING.md |
-| 有版本发布 | CHANGELOG.md | CHANGELOG.md |
-| 处理敏感数据/有企业用户 | SECURITY.md | — |
-| 用户量较大 | SUPPORT.md + SECURITY.md | — |
-| 多人维护/大型项目 | GOVERNANCE.md + CODEOWNERS + MAINTAINERS.md | — |
-| 学术/科研项目 | CITATION.cff | — |
-| 使用 Apache-2.0 许可证 | NOTICE | — |
-| 接受赞助 | FUNDING.yml | — |
-| 有 Docker 部署需求 | Dockerfile + docker-compose.yml | — |
-| 使用环境变量 | .env.example | — |
-| 多人协作 | .editorconfig + .gitattributes | .editorconfig |
-| 跨平台项目 | .gitattributes | — |
-| 文档量大 | ARCHITECTURE.md | — |
-| 常见问题多 | FAQ.md | — |
-| 有明确路线图 | ROADMAP.md | — |
-| 安装步骤复杂 | INSTALL.md | — |
-| 有构建/测试流程 | Makefile | — |
+| Accepts external contributions | ISSUE_TEMPLATE/ + PULL_REQUEST_TEMPLATE.md | CONTRIBUTING.md |
+| Has version releases | CHANGELOG.md | CHANGELOG.md |
+| Handles sensitive data / has enterprise users | SECURITY.md | — |
+| Large user base | SUPPORT.md + SECURITY.md | — |
+| Multi-maintainer / large project | GOVERNANCE.md + CODEOWNERS + MAINTAINERS.md | — |
+| Academic/research project | CITATION.cff | — |
+| Uses Apache-2.0 license | NOTICE | — |
+| Accepts sponsorships | FUNDING.yml | — |
+| Has Docker deployment needs | Dockerfile + docker-compose.yml | — |
+| Uses environment variables | .env.example | — |
+| Multi-person collaboration | .editorconfig + .gitattributes | .editorconfig |
+| Cross-platform project | .gitattributes | — |
+| Large documentation volume | ARCHITECTURE.md | — |
+| Many common questions | FAQ.md | — |
+| Has a clear roadmap | ROADMAP.md | — |
+| Complex installation steps | INSTALL.md | — |
+| Has build/test workflow | Makefile | — |
 
-### 技术栈 → .gitignore 模板
+### Tech Stack → .gitignore Template
 
-| 技术栈 | .gitignore 关键内容 |
+| Tech Stack | Key .gitignore Contents |
 |--------|---------------------|
-| Node.js | `node_modules/`、`dist/`、`.env`、`npm-debug.log*` |
-| Python | `__pycache__/`、`*.pyc`、`.venv/`、`*.egg-info/`、`.pytest_cache/` |
-| Go | `*.exe`、`*.dll`、`*.so`、`*.dylib`、`vendor/`（视情况） |
-| Rust | `target/`、`Cargo.lock`（库项目时） |
-| Java | `target/`、`*.class`、`.gradle/`、`build/` |
-| C# / .NET | `bin/`、`obj/`、`*.user`、`.vs/` |
-| Godot | `.godot/`、`*.import`、`export_presets.cfg` |
-| C/C++ | `*.o`、`*.obj`、`*.exe`、`*.a`、`*.so`、`build/` |
+| Node.js | `node_modules/`, `dist/`, `.env`, `npm-debug.log*` |
+| Python | `__pycache__/`, `*.pyc`, `.venv/`, `*.egg-info/`, `.pytest_cache/` |
+| Go | `*.exe`, `*.dll`, `*.so`, `*.dylib`, `vendor/` (case by case) |
+| Rust | `target/`, `Cargo.lock` (for library projects) |
+| Java | `target/`, `*.class`, `.gradle/`, `build/` |
+| C# / .NET | `bin/`, `obj/`, `*.user`, `.vs/` |
+| Godot | `.godot/`, `*.import`, `export_presets.cfg` |
+| C/C++ | `*.o`, `*.obj`, `*.exe`, `*.a`, `*.so`, `build/` |
 
-### 许可证选择指南
+### License Selection Guide
 
-| 许可证 | 适用场景 | 特点 |
+| License | Applicable Scenario | Characteristics |
 |--------|---------|------|
-| MIT | 希望被广泛集成的库/工具 | 最宽松，几乎无限制 |
-| Apache-2.0 | 企业级项目 | 明确专利授权，规避专利风险 |
-| GPL-3.0 | 要求衍生作品也开源 | "传染性"开源，保护自由 |
-| BSD-3-Clause | 学术/科研项目 | 类似 MIT，带广告条款 |
-| LGPL-3.0 | 库/框架 | 允许非自由软件链接 |
-| AGPL-3.0 | 网络服务 | 闭源网络服务也必须开源 |
-| Unlicense | 完全放弃版权 | 公共领域 |
+| MIT | Libraries/tools that want broad adoption | Most permissive, almost no restrictions |
+| Apache-2.0 | Enterprise-grade projects | Explicit patent grant, avoids patent risks |
+| GPL-3.0 | Requires derivative works to be open source too | "Copyleft" open source, protects freedom |
+| BSD-3-Clause | Academic/research projects | Similar to MIT, with advertising clause |
+| LGPL-3.0 | Libraries/frameworks | Allows linking by non-free software |
+| AGPL-3.0 | Network services | Closed-source network services must also be open source |
+| Unlicense | Completely waives copyright | Public domain |
 
-当用户未指定许可证时，在第三步向用户展示上述选项并询问。默认推荐 MIT（通用）或 Apache-2.0（企业级）。
-
----
-
-## 内容生成要点
-
-生成文档时，遵循以下原则确保质量：
-
-### README.md 生成要点
-
-README 是最重要的文档。一个优秀的 README 应该让用户在 30 秒内理解"这是什么、能做什么、怎么用"。
-
-必须包含的章节：
-1. **项目标题 + 一句话描述** — 可选配 Badge（CI 状态、版本号、许可证）
-2. **项目简介** — 解决什么问题，核心价值
-3. **功能特性** — 列出关键功能点
-4. **安装方式** — 具体命令（npm install、pip install、go get 等）
-5. **快速开始** — 最小可用示例代码
-6. **使用文档** — 或链接到详细文档
-7. **配置说明** — 环境变量、配置文件等（如有）
-8. **开发指南** — 链接到 CONTRIBUTING.md
-9. **许可证** — 声明许可证并链接到 LICENSE 文件
-
-可选章节（根据项目情况添加）：
-- 项目截图/GIF 演示
-- 架构图
-- 常见问题（或链接到 FAQ.md）
-- 贡献者列表
-- 致谢
-- 更新日志链接
-
-### 其他文件生成要点
-
-详细的每种文件内容指南，请阅读 `references/file-types-guide.md`。该文件包含：
-- 每种文件的完整内容结构
-- 模板和示例
-- 最佳实践建议
-- 常见错误避免
+When the user has not specified a license, present the above options to the user in Step 3 and ask. Default recommendations are MIT (general purpose) or Apache-2.0 (enterprise-grade).
 
 ---
 
-## 质量检查清单
+## Content Generation Key Points
 
-生成文档后，逐项检查：
+When generating documents, follow these principles to ensure quality:
 
-- [ ] README 是否能在 30 秒内让读者理解项目用途
-- [ ] LICENSE 文件是否包含完整的许可证文本（不是仅有名称）
-- [ ] LICENSE 文件的类型是否与用户在第三步确认的一致
-- [ ] .gitignore 是否覆盖了项目技术栈的常见忽略项
-- [ ] 所有文档中的命令和路径是否与项目实际一致
-- [ ] 文档之间的交叉链接是否正确
-- [ ] 是否有占位符未填充（如 `TODO: 补充描述`）
-- [ ] 代码示例是否可运行
-- [ ] 文档语言是否与用户在第三步确认的一致
-- [ ] Markdown 格式是否正确（标题层级、代码块语言标注等）
-- [ ] 用户已有的文件是否未被覆盖
+### README.md Generation Key Points
+
+The README is the most important document. An excellent README should let users understand "what it is, what it can do, and how to use it" within 30 seconds.
+
+Required sections:
+1. **Project title + one-line description** — optionally with Badges (CI status, version, license)
+2. **Project introduction** — what problem it solves, core value
+3. **Features** — list key functionality
+4. **Installation** — specific commands (npm install, pip install, go get, etc.)
+5. **Quick start** — minimal working example code
+6. **Usage documentation** — or link to detailed docs
+7. **Configuration** — environment variables, config files, etc. (if any)
+8. **Development guide** — link to CONTRIBUTING.md
+9. **License** — declare the license and link to the LICENSE file
+
+Optional sections (add as appropriate for the project):
+- Project screenshots/GIF demos
+- Architecture diagrams
+- FAQ (or link to FAQ.md)
+- Contributors list
+- Acknowledgements
+- Changelog link
+
+### Other Files Generation Key Points
+
+For detailed content guidelines for each file type, read `references/file-types-guide.md`. That file includes:
+- The complete content structure for each file type
+- Templates and examples
+- Best practice recommendations
+- Common mistakes to avoid
 
 ---
 
-## 输出格式
+## Quality Checklist
 
-最终向用户呈现：
+After generating the documents, check each item:
 
-1. **项目分析摘要**（第三步）：简明的项目特征总结
-2. **分级推荐方案**（第三步）：3-4 个方案供用户选择
-3. **需要确认的问题**（第三步）：许可证类型、文档语言等
-4. **生成的文件**（第四步）：每个文件的实际内容
-5. **总结报告**（第五步）：创建了哪些文件、建议补充的内容、未创建的文件及原因
+- [ ] Can the README let readers understand the project's purpose within 30 seconds
+- [ ] Does the LICENSE file contain the full license text (not just the name)
+- [ ] Is the LICENSE file type consistent with what the user confirmed in Step 3
+- [ ] Does the .gitignore cover the common ignore entries for the project's tech stack
+- [ ] Are all commands and paths in the documentation consistent with the project's actual ones
+- [ ] Are cross-links between documents correct
+- [ ] Are there any unfilled placeholders (such as `TODO: add description`)
+- [ ] Are code examples runnable
+- [ ] Is the documentation language consistent with what the user confirmed in Step 3
+- [ ] Is the Markdown formatting correct (heading hierarchy, code block language tags, etc.)
+- [ ] Are the user's existing files left unoverwritten
+
+---
+
+## Output Format
+
+Ultimately present to the user:
+
+1. **Project Analysis Summary** (Step 3): a concise summary of project characteristics
+2. **Tiered Recommendation Plans** (Step 3): 3-4 plans for the user to choose from
+3. **Questions to Confirm** (Step 3): license type, documentation language, etc.
+4. **Generated Files** (Step 4): the actual content of each file
+5. **Summary Report** (Step 5): which files were created, suggested additions, files not created and the reasons
